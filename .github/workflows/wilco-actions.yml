@@ -13,13 +13,20 @@ jobs:
       - name: Check out project
         uses: actions/checkout@v2
 
+      - name: Install latest Docker
+        run: |
+          sudo apt-get remove -y docker docker-engine docker.io containerd runc
+          curl -fsSL https://get.docker.com -o get-docker.sh
+          sudo sh get-docker.sh
+          docker --version
+
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "16"
 
       - name: Start MongoDB
-        uses: supercharge/mongodb-github-action@1.6.0
+        uses: supercharge/mongodb-github-action@1.10.0
         with:
           mongodb-version: "4.4"
 
