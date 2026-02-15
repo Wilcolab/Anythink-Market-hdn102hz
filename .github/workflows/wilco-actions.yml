@@ -18,28 +18,27 @@ jobs:
       - name: Check out project
         uses: actions/checkout@v2
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-        with:
-          buildkitd-flags: --debug
-
-      - name: Check Docker version
-        run: docker version
-
-      - name: Run Docker with newer API
+      # STEP 1: Fix the Docker API version issue by installing the latest version
+      - name: Install latest Docker
         run: |
-          docker version # This checks and prints the Docker version
+          sudo apt-get remove -y docker docker-engine docker.io containerd runc
+          curl -fsSL https://get.docker.com -o get-docker.sh
+          sudo sh get-docker.sh
+          docker --version
 
+      # STEP 2: Set up the programming environment
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "16"
 
+      # STEP 3: Start the database using an updated action version
       - name: Start MongoDB
-        uses: supercharge/mongodb-github-action@1.6.0
+        uses: supercharge/mongodb-github-action@1.10.0
         with:
           mongodb-version: "5.0"
 
+      # STEP 4: Handle environment variables and Wilco checks
       - uses: oNaiPs/secrets-to-env-action@v1
         with:
           secrets: ${{ toJSON(secrets) }}
