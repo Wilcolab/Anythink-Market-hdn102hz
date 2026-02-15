@@ -18,6 +18,21 @@ jobs:
         with:
           node-version: "16"
 
+     # --- ADD THE NEW CODE BELOW THIS LINE ---
+      - name: Install latest Docker
+        run: |
+          sudo apt-get remove docker docker-engine docker.io containerd runc
+          sudo apt-get update
+          sudo apt-get install -y ca-certificates curl gnupg
+          sudo install -m 0755 -d /etc/apt/keyrings
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+          echo \
+            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+            $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+          sudo apt-get update
+          sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+      # --- ADD THE NEW CODE ABOVE THIS LINE --- 
+
       - name: Start MongoDB
         uses: supercharge/mongodb-github-action@1.6.0
         with:
